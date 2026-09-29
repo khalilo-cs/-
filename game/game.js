@@ -2,7 +2,7 @@
 'use strict';
 /* ===================== مغامرة زاكي — لعبة منصات كلاسيكية ===================== */
 const T = 16, VW = 256, VH = 224, ROWS = 14, SC = 2;
-const NW = 12, NS = 4, NLEV = NW * NS;
+const NW = 24, NS = 4, NLEV = NW * NS, PAGE = 12;
 const CFG = window.GAME_CONFIG || {};
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
@@ -22,7 +22,7 @@ const THEMES = [
   { name: 'جزر السماء', sky: ['#40a8ff', '#d0f4ff'], ground: '#e8f0ff', top: '#ffc8ec', brick: '#90b0e8', mode: 'sky' },
   { name: 'قلعة الملك', sky: ['#100818', '#382848'], ground: '#404050', top: '#8080a0', brick: '#605070', mode: 'castle' },
 ];
-const worldName = w => THEMES[w % 8].name + (w >= 8 ? ' ٢' : '');
+const worldName = w => THEMES[w % 8].name + (w >= 8 ? ' ' + ['', '', '٢', '٣'][Math.floor(w / 8) + 1] : '');
 const SOLID = new Set(['#', 'B', 'H', '?', '!', 'l', 'r', 'L', 'R', 'D']);
 
 /* ---------------------------- توليد المراحل ---------------------------- */
@@ -32,7 +32,7 @@ function genLevel(w, s) {
   const R = (a, b) => a + Math.floor(rnd() * (b - a + 1));
   const th = boss ? THEMES[7] : THEMES[w % 8];
   const sky = !boss && w % 8 === 6;
-  const W = boss ? 130 + R(0, 10) : 160 + R(0, 40) + Math.floor(d * 50);
+  const W = boss ? 150 + R(0, 10) : 240 + R(0, 60) + Math.floor(d * 120);
   const g = []; for (let y = 0; y < ROWS; y++) g.push(new Array(W).fill('.'));
   const q = new Map(), spawns = [];
   const set = (x, y, c) => { if (x >= 0 && x < W && y >= 0 && y < ROWS) g[y][x] = c; };
@@ -136,7 +136,7 @@ function genLevel(w, s) {
     for (let y = 0; y < 12; y++) set(gateX, y, 'D');
     spawns.push({ t: 'boss', x: gateX - 6, y: 12 });
   }
-  return { W, g, q, spawns, theme: th, boss, sky, idx, w, s, time: boss ? 300 : 400, lava: th.mode === 'lava' || th.mode === 'castle', fx, arenaL, gateX };
+  return { W, g, q, spawns, theme: th, boss, sky, idx, w, s, time: boss ? 400 : 600, lava: th.mode === 'lava' || th.mode === 'castle', fx, arenaL, gateX };
 }
 
 /* ---------------------------- الصوت ---------------------------- */
@@ -657,15 +657,18 @@ function titleMenu() {
   setMenu(items);
 }
 function shareGame() {
-  const url = CFG.shareUrl || location.href, text = 'العب مغامرة زاكي — ' + NLEV + ' مرحلة من المرح الكلاسيكي!';
-  if (navigator.share) navigator.share({ title: 'مغامرة زاكي', text, url }).catch(() => {});
+  const url = CFG.shareUrl || (location.protocol.startsWith('http') ? location.href : ''), text = 'العب مغامرة زاكي — ' + NLEV + ' مرحلة من المرح الكلاسيكي!';
+  if (window.AndroidBridge && AndroidBridge.share) AndroidBridge.share((text + ' ' + url).trim());
+  else if (navigator.share) navigator.share({ title: 'مغامرة زاكي', text, url }).catch(() => {});
   else if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => alert('تم نسخ الرابط!')).catch(() => prompt('انسخ الرابط:', url));
   else prompt('انسخ الرابط:', url);
 }
 
 /* ---------------------------- شاشة اختيار المرحلة ---------------------------- */
 const WC = { x0: 12, y0: 40, w: 36, h: 32, gx: 4, gy: 4 };
-const wRect = i => ({ x: WC.x0 + (i % 6) * (WC.w + WC.gx), y: WC.y0 + Math.floor(i / 6) * (WC.h + WC.gy), w: WC.w, h: WC.h });
+const wRect = i => { const k = i % PAGE; return { x: WC.x0 + (k % 6) * (WC.w + WC.gx), y: WC.y0 + Math.floor(k / 6) * (WC.h + WC.gy), w: WC.w, h: WC.h }; };
+const pgPrev = { x: 4, y: 6, w: 40, h: 26 }, pgNext = { x: VW - 44, y: 6, w: 40, h: 26 };
+const selPage = () => Math.floor(selW / PAGE);
 const sRect = i => ({ x: 14 + i * 60, y: 140, w: 54, h: 36 });
 const playBtn = { x: 68, y: 190, w: 120, h: 24 };
 const inR = (x, y, r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
@@ -673,7 +676,9 @@ function drawSelect() {
   const th = THEMES[selW % 8]; drawBackground(th, tick * 0.5);
   ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(0, 0, VW, VH);
   txt('اختر المرحلة', VW / 2, 22, 16, '#ffd76a', 'center', undefined, '#000');
-  for (let i = 0; i < NW; i++) {
+  txt('◀', 24, 26, 16, selPage() > 0 ? '#fff' : '#666'); txt('▶', VW - 24, 26, 16, selPage() < NW / PAGE - 1 ? '#fff' : '#666');
+  txt((selPage() + 1) + '/' + (NW / PAGE), VW - 24, 38, 8, '#ccc');
+  for (let i = selPage() * PAGE; i < Math.min(NW, selPage() * PAGE + PAGE); i++) {
     const r = wRect(i), lock = i * NS > prog.unlocked, s = i === selW, t2 = THEMES[i % 8];
     ctx.fillStyle = lock ? '#333' : t2.sky[0]; ctx.fillRect(r.x, r.y, r.w, r.h);
     ctx.fillStyle = lock ? '#222' : t2.top; ctx.fillRect(r.x, r.y + r.h - 8, r.w, 8);
@@ -704,7 +709,9 @@ function startSelected() { const idx = selW * NS + selS; if (idx <= prog.unlocke
 function tap(x, y) {
   if (state === 'title') { menu.items.forEach((it, i) => { if (inR(x, y, it)) { menu.sel = i; sfx('select'); it.fn(); if (state === 'title') layoutMenu(menu.items); } }); }
   else if (state === 'select') {
-    for (let i = 0; i < NW; i++) if (inR(x, y, wRect(i))) { selW = i; sfx('select'); }
+    for (let i = selPage() * PAGE; i < Math.min(NW, selPage() * PAGE + PAGE); i++) if (inR(x, y, wRect(i))) { selW = i; sfx('select'); }
+    if (inR(x, y, pgPrev)) { selW = clamp(selW - PAGE, 0, NW - 1); sfx('select'); }
+    if (inR(x, y, pgNext)) { selW = clamp(selW + PAGE, 0, NW - 1); sfx('select'); }
     for (let i = 0; i < NS; i++) if (inR(x, y, sRect(i))) { if (selS === i) startSelected(); selS = i; sfx('select'); }
     if (inR(x, y, playBtn)) startSelected();
     if (x > VW - 70 && y > VH - 16) { state = 'title'; titleMenu(); }
@@ -802,6 +809,16 @@ function initMonetization() {
   const foot = document.getElementById('foot');
   if (CFG.supportUrl) { const a = document.createElement('a'); a.href = CFG.supportUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = CFG.supportText || 'ادعمنا'; foot.appendChild(a); }
 }
+
+// زر الرجوع في تطبيق أندرويد + إيقاف مؤقت عند مغادرة الصفحة
+window.__zakiBack = () => {
+  if (state === 'play') { state = 'paused'; return true; }
+  if (state === 'paused') { state = 'play'; return true; }
+  if (state === 'select') { state = 'title'; titleMenu(); return true; }
+  if (state === 'gameover' || state === 'end') { state = 'title'; titleMenu(); return true; }
+  return false;
+};
+document.addEventListener('visibilitychange', () => { if (document.hidden && state === 'play') state = 'paused'; });
 
 // للاختبار الآلي فقط
 window.__zaki = { step() { step(); hit.clear(); }, genLevel, get state() { return state; }, get P() { return P; }, get L() { return L; }, get score() { return score; }, get levelIdx() { return levelIdx; }, newGame, down, hit, get ents() { return ents; }, NLEV, get time() { return time; } };
