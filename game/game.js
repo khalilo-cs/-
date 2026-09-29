@@ -807,6 +807,7 @@ function initMonetization() {
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
   const foot = document.getElementById('foot');
+  if (CFG.privacyUrl) { const a = document.createElement('a'); a.href = CFG.privacyUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'سياسة الخصوصية'; a.style.marginInlineEnd = '12px'; foot.appendChild(a); }
   if (CFG.supportUrl) { const a = document.createElement('a'); a.href = CFG.supportUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = CFG.supportText || 'ادعمنا'; foot.appendChild(a); }
 }
 
