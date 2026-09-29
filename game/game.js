@@ -804,7 +804,7 @@ function initMonetization() {
 }
 
 // للاختبار الآلي فقط
-window.__zaki = { genLevel, get state() { return state; }, get P() { return P; }, get L() { return L; }, get score() { return score; }, get levelIdx() { return levelIdx; }, newGame, down, hit, get ents() { return ents; }, NLEV, get time() { return time; } };
+window.__zaki = { step() { step(); hit.clear(); }, genLevel, get state() { return state; }, get P() { return P; }, get L() { return L; }, get score() { return score; }, get levelIdx() { return levelIdx; }, newGame, down, hit, get ents() { return ents; }, NLEV, get time() { return time; } };
 
 initMonetization(); titleMenu();
 requestAnimationFrame(frame);
