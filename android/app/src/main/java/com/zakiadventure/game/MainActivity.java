@@ -39,6 +39,14 @@ public class MainActivity extends Activity {
             startActivity(Intent.createChooser(i, null));
         }
 
+        @JavascriptInterface
+        public void vibrate(int ms) {
+            try {
+                android.os.Vibrator v = (android.os.Vibrator) getSystemService(VIBRATOR_SERVICE);
+                if (v != null) v.vibrate(android.os.VibrationEffect.createOneShot(Math.max(10, Math.min(ms, 300)), android.os.VibrationEffect.DEFAULT_AMPLITUDE));
+            } catch (Exception ignored) {}
+        }
+
         /** تُستدعى من اللعبة بعد إنهاء كل مرحلة؛ نعرض إعلاناً بينياً كل 3 مراحل */
         @JavascriptInterface
         public void levelEnd(int level) {
