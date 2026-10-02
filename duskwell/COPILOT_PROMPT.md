@@ -23,7 +23,7 @@ REPOSITORY (read it first)
                            pixel.js (normal-mapped 3D lighting for pixel sprites), audio.js,
                            charms.js + art_charms.js (14 original charms, notches, overcharm, shop);
                            lantern stations (fast travel) live in game.js and world.js
-  - duskwell/tests/        Playwright bot tests (charms, charm_world, spells, travel); run each with node, and extend them
+  - duskwell/tests/        Playwright bot tests (charms, charm_world, spells, travel, enemies); run each with node, and extend them
   - duskwell/tools/        generators (music, painted backgrounds, sprites, sound effects)
   - duskwell/unity/Scripts C# equivalents of the main systems (27 scripts): study them, they are the starting point
   - duskwell-android/      WebView APK build (./build-apk.sh)
