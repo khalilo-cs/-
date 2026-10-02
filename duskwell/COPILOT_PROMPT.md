@@ -19,21 +19,21 @@ REPOSITORY (read it first)
   branch: main  (use ccr-a7cbb23d-ctab00 if pull request #5 is not merged yet)
   - duskwell/              the browser game (HTML5 canvas, plain JavaScript, no build step)
   - duskwell/README.md, duskwell/CREDITS.md    architecture and licences: read both before anything else
-  - duskwell/js/           world.js + world_frost.js + world_ember.js + world_end.js (rooms; the last one finishes the world),
-                           entities.js (player + 22 enemy types), bosses.js (9 bosses), mechanics.js,
+  - duskwell/js/           world.js + world_frost.js + world_ember.js + world_storm.js + world_mirror.js + world_end.js (rooms; the last one finishes the world),
+                           entities.js (player + 22 enemy types + wind zones), bosses.js (13 bosses), mechanics.js,
                            lumen.js (WebGL2 screen-space lighting: baked rock normal maps, point lights, ray-marched shadows,
                            bloom, shafts, aberration, haze, caustics; falls back to the 2D lighting in art_world.js),
                            pixel.js (normal-mapped 3D lighting for pixel sprites), audio.js,
-                           charms.js + art_charms.js (17 original charms, notches, overcharm, shop);
+                           charms.js + art_charms.js (19 original charms, notches, overcharm, shop);
                            lantern stations (fast travel) live in game.js and world.js
-  - duskwell/tests/        Playwright bot tests (charms, charm_world, spells, travel, enemies, enemies2, bosses2, world_reach, lumen);
+  - duskwell/tests/        Playwright bot tests (charms, charm_world, spells, travel, enemies, enemies2, bosses2, storm, mirror, world_reach, lumen);
                            run each with node, and extend them. explore.js is a reachability explorer that drives the real
                            player physics (runs, jumps, dashes, double jumps, wall climbs) to prove every door and item can be reached.
   - duskwell/tools/        generators (music, painted backgrounds, sprites, sound effects)
   - duskwell/unity/Scripts C# equivalents of the main systems (27 scripts): study them, they are the starting point
   - duskwell-android/      WebView APK build (./build-apk.sh)
 Run the browser game: serve the duskwell folder (python3 -m http.server) and open index.html.
-Keep it working at all times: node duskwell/tools-dump.js must print "world OK (49 rooms)".
+Keep it working at all times: node duskwell/tools-dump.js must print "world OK (63 rooms)".
 This is my own project: use ALL the techniques already in it (finite-state-machine enemies, generator-based bosses,
 SmoothDamp camera, depth parallax, lightmap + bloom + fog, normal-mapped pixel lighting, layered music,
 recorded sound effects, tool scripts) and improve them.
@@ -89,7 +89,7 @@ The game must include:
 - Original boss encounters with several attack patterns, phases, and health bars.
 - Health, damage feedback, death, checkpoints (benches), respawning.
 - A resource/energy system for special abilities (the soul / healing / dive spell of Duskwell).
-- A world of interconnected regions with unique environments (Duskwell has 11 areas and 49 rooms: port them).
+- A world of interconnected regions with unique environments (Duskwell has 13 areas and 63 rooms: port them).
 - Exploration, hidden areas, collectibles, unlockable abilities, environmental puzzles.
 - A map and player navigation system.
 - Save/load that keeps progress, unlocked abilities, collected items, and checkpoints.
