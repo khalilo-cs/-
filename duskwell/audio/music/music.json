@@ -1,0 +1,86 @@
+{
+ "aqueduct": {
+  "loop": 109.7143,
+  "gain": 0.776
+ },
+ "boss": {
+  "loop": 53.3333,
+  "gain": 0.868
+ },
+ "boss_bone": {
+  "loop": 51.8919,
+  "gain": 0.887
+ },
+ "boss_moon": {
+  "loop": 49.2308,
+  "gain": 0.839
+ },
+ "crossroads": {
+  "loop": 106.6667,
+  "gain": 0.917
+ },
+ "crystal": {
+  "loop": 73.8462,
+  "gain": 0.812
+ },
+ "ember": {
+  "loop": 83.4783,
+  "gain": 0.881
+ },
+ "ending": {
+  "loop": 87.2727,
+  "gain": 0.836
+ },
+ "foundry": {
+  "loop": 80.0,
+  "gain": 0.803
+ },
+ "frost": {
+  "loop": 92.9032,
+  "gain": 0.664
+ },
+ "hushvale": {
+  "loop": 72.0,
+  "gain": 0.956
+ },
+ "king": {
+  "loop": 58.1818,
+  "gain": 0.808
+ },
+ "lunar": {
+  "loop": 92.3077,
+  "gain": 0.855
+ },
+ "mirror": {
+  "loop": 84.7059,
+  "gain": 0.887
+ },
+ "moss": {
+  "loop": 91.4286,
+  "gain": 0.657
+ },
+ "ossuary": {
+  "loop": 99.3103,
+  "gain": 0.767
+ },
+ "overture": {
+  "loop": 106.6667,
+  "gain": 1.0
+ },
+ "spore": {
+  "loop": 76.8,
+  "gain": 0.724
+ },
+ "storm": {
+  "loop": 60.9524,
+  "gain": 0.805
+ },
+ "throne": {
+  "loop": 68.5714,
+  "gain": 0.69
+ },
+ "webbed": {
+  "loop": 66.2069,
+  "gain": 0.689
+ }
+}
